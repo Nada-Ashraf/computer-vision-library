@@ -10,6 +10,18 @@
     Building a computer vision library from the ground up mostly in c.
   </p>
 
+## Index
+
+|     |                                          Assignment                                          |
+| --- | :------------------------------------------------------------------------------------------: |
+| [x] |           [**Homework 0: Fun with color!**](./Homework0:Fun-with-color!/README.md)           |
+| [ ] | [**Homework 1: Resizing and convolutions**](./Homework1:Resizing-and-convolutions/README.md) |
+| [ ] |                                  **Homework 2: Panoramas!**                                  |
+| [ ] |                                  **Homework 2: Panoramas!**                                  |
+| [ ] |                                 **Homework 3: Optical Flow**                                 |
+| [ ] |                     **Homework 4: Neural Networks and Machine Learning**                     |
+| [ ] |                                   **Homework 5: PyTorch**                                    |
+
 ## Course Material
 
 [The Ancient Secrets of Computer Vision - University of Washington, Spring 2018](https://courses.cs.washington.edu/courses/cse455/18sp/)
