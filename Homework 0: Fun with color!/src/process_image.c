@@ -126,8 +126,6 @@ void clamp_image(image im)
         }
     }
 }
-
-// These might be handy
 float three_way_max(float a, float b, float c)
 {
     return (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);
@@ -194,13 +192,13 @@ void rgb_to_hsv(image im)
             float B = get_pixel(im, x, y, 2);
 
             // compute Value
-            V = compute_value(R, G, B);
+            float V = compute_value(R, G, B);
 
             // compute Saturation
-            S = compute_saturation(V, R, G, B);
+            float S = compute_saturation(V, R, G, B);
 
             // compute Hue
-            V = compute_hue(V, R, G, B);
+            float H = compute_hue(V, R, G, B);
 
             // set pixels
             set_pixel(im, x, y, 0, H);
