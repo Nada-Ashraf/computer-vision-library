@@ -4,7 +4,7 @@
 #include <math.h>
 #include "image.h"
 
-int clamp_badding(int value, int min, int max)
+int clamp_padding(int value, int min, int max)
 {
     // if min <= max is TRUE assert() does nothing
     // if FALSE assert() displays an error message on stderr and aborts program execution
@@ -23,9 +23,9 @@ int clamp_badding(int value, int min, int max)
 float get_pixel(image im, int x, int y, int c)
 {
     // clamp padding
-    x = clamp_badding(x, 0, im.w);
-    y = clamp_badding(y, 0, im.h);
-    c = clamp_badding(c, 0, im.c);
+    x = clamp_padding(x, 0, im.w);
+    y = clamp_padding(y, 0, im.h);
+    c = clamp_padding(c, 0, im.c);
 
     // in data array the image is stored in CHW format
     // to access a pixel at a certain position:
@@ -106,7 +106,25 @@ void shift_image(image im, int c, float v)
 
 void clamp_image(image im)
 {
-    // TODO Fill this in
+    // to avoid overflow
+    // make sure the pixel values in the image stay between 0 and 1.
+    for (int c = 0; c < im.c; c++)
+    {
+        for (int x = 0; x < im.w; x++)
+        {
+            for (int y = 0; y < im.h; y++)
+            {
+                // get and set value of pixel
+                float pixel_value = get_pixel(im, x, y, c);
+
+                // any value below zero gets set to zero
+                // and any value above 1 gets set to one.
+                float clipped_value = pixel_value > 1.0 ? 1.0 : pixel_value;
+
+                set_pixel(im, x, y, c, clipped_value);
+            }
+        }
+    }
 }
 
 // These might be handy
