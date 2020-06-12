@@ -37,7 +37,8 @@ float get_pixel(image im, int x, int y, int c)
 
 void set_pixel(image im, int x, int y, int c, float v)
 {
-    // TODO Fill this in
+    int index = x + (im.w * y) + (im.w * im.h * c);
+    im.data[index] = v;
 }
 
 image copy_image(image im)
