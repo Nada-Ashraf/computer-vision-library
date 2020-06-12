@@ -138,9 +138,76 @@ float three_way_min(float a, float b, float c)
     return (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c);
 }
 
+float compute_value(float R, float G, float B)
+{
+    return three_way_max(R, G, B);
+}
+float compute_saturation(float V, float R, float G, float B)
+{
+    float m = three_way_min(R, G, B);
+    float C = V - m;
+    if (V > 0)
+    {
+        return C / V;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+float compute_hue(float V, float R, float G, float B)
+{
+    float H;
+    float m = three_way_min(R, G, B);
+    float C = V - m;
+    float H_hatch = 0;
+    if (C == 0)
+    {
+        H = 0;
+    }
+    else
+    {
+        if (V == R)
+            H_hatch = (G - B) / C;
+        if (V == G)
+            H_hatch = (B - R) / C + 2;
+        if (V == B)
+            H_hatch = (R - G) / C + 4;
+        H = H_hatch / 6.;
+        if (H_hatch < 0)
+            H = H + 1;
+    }
+    return H;
+}
+
 void rgb_to_hsv(image im)
 {
-    // TODO Fill this in
+    float S, V, H;
+    for (int y = 0; y < im.h; y++)
+    {
+        for (int x = 0; x < im.w; x++)
+        {
+            // get pixel values
+            float R = get_pixel(im, x, y, 0);
+            float G = get_pixel(im, x, y, 1);
+            float B = get_pixel(im, x, y, 2);
+
+            // compute Value
+            V = compute_value(R, G, B);
+
+            // compute Saturation
+            S = compute_saturation(V, R, G, B);
+
+            // compute Hue
+            V = compute_hue(V, R, G, B);
+
+            // set pixels
+            set_pixel(im, x, y, 0, H);
+            set_pixel(im, x, y, 1, S);
+            set_pixel(im, x, y, 2, V);
+        }
+    }
 }
 
 void hsv_to_rgb(image im)
