@@ -43,6 +43,7 @@ void set_pixel(image im, int x, int y, int c, float v)
 
 image copy_image(image im)
 {
+    // return an empty image
     image copy = make_image(im.w, im.h, im.c);
 
     // loop over every channel, width, height index to get all pixels
@@ -66,14 +67,31 @@ image copy_image(image im)
 image rgb_to_grayscale(image im)
 {
     assert(im.c == 3);
+    // make an empty image with 1 channel
     image gray = make_image(im.w, im.h, 1);
-    // TODO Fill this in
+
+    // loop over every pixel and set RGB values to greyscale
+    for (int x = 0; x < im.w; x++)
+    {
+        for (int y = 0; y < im.h; y++)
+        {
+            // get R values of the pixel from channel 0
+            float R = get_pixel(im, x, y, 0);
+            // get G values of the pixel from channel 1
+            float G = get_pixel(im, x, y, 1);
+            // get B values of the pixel from channel 2
+            float B = get_pixel(im, x, y, 2);
+            // use luma claculation to find an approximation of perceptual intensity
+            float luma_gray = 0.299 * R + 0.587 * G + 0.114 * B;
+            // set pixel value to gray
+            set_pixel(gray, x, y, 0, luma_gray);
+        }
+    }
     return gray;
 }
 
 void shift_image(image im, int c, float v)
 {
-    // TODO Fill this in
 }
 
 void clamp_image(image im)
