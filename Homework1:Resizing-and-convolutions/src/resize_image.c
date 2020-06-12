@@ -44,18 +44,32 @@ image nn_resize(image im, int w, int h)
 
 float bilinear_interpolate(image im, float x, float y, int c)
 {
-    // https://github.com/mikeedi/CV-course/blob/master/vision-hw1/src/resize_image.c
-    int floor_x = floor(x);
-    int ceil_x = ceil(x);
+    // https://github.com/raytroop/CSE455-Homework/blob/master/vision-hw1/src/resize_image.c
 
-    int floor_y = floor(y);
-    int ceil_y = ceil(y);
+    // get the coordinates of the box surrounding the interpolated value q
+    int left = floorf(x);
+    int right = ceilf(x);
+    int top = floorf(y);
+    int bottom = ceilf(y);
 
-    float q1 = (y - floor_y) * get_pixel(im, floor_x, ceil_y, c) + (ceil_y - y) * get_pixel(im, floor_x, floor_y, c);
-    float q2 = (y - floor_y) * get_pixel(im, ceil_x, ceil_y, c) + (ceil_y - y) * get_pixel(im, ceil_x, floor_y, c);
+    // get the pixel value of the 4 nearby pixels
+    float v1 = get_pixel(im, left, top, c);
+    float v2 = get_pixel(im, right, top, c);
+    float v3 = get_pixel(im, left, bottom, c);
+    float v4 = get_pixel(im, right, bottom, c);
 
-    float value = (ceil_x - x) * q1 + (x - floor_x) * q2;
-    return value;
+    // distance between the 4 nearby pixels and the interpolated value q
+    float d1 = bottom - y;
+    float d2 = y - top;
+    float d3 = x - left;
+    float d4 = right - x;
+
+    // calculate how much each pixel contribute to the interpolated value q
+    float q1 = v1 * d1 + v3 * d2;
+    float q2 = v2 * d1 + v4 * d2;
+    float q = q2 * d3 + q1 * d4;
+
+    return q;
 }
 
 image bilinear_resize(image im, int w, int h)
