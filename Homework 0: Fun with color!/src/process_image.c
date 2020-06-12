@@ -44,7 +44,22 @@ void set_pixel(image im, int x, int y, int c, float v)
 image copy_image(image im)
 {
     image copy = make_image(im.w, im.h, im.c);
-    // TODO Fill this in
+
+    // loop over every channel, width, height index to get all pixels
+    for (int c = 0; c < im.c; c++)
+    {
+        for (int w = 0; w < im.w; w++)
+        {
+            for (int h = 0; h < im.h; h++)
+            {
+                // get the pixel value of the current position
+                float pixel_value = get_pixel(im, w, h, c);
+
+                // set the pixel value in image copy
+                set_pixel(copy, w, h, c, pixel_value);
+            }
+        }
+    }
     return copy;
 }
 
