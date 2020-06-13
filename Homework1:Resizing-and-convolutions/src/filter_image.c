@@ -352,8 +352,37 @@ void feature_normalize(image im)
 
 image *sobel_image(image im)
 {
-    // TODO
-    return calloc(2, sizeof(image));
+    /*!
+    * return two images, the gradient magnitude and direction
+    */
+
+    // allocate and zero-initialize array
+    image *mag_and_direct = calloc(2, sizeof(image));
+    mag_and_direct[0] = make_image(im.w, im.h, 1);
+    mag_and_direct[1] = make_image(im.w, im.h, 1);
+
+    // make the filters
+    image sobel_gx = convolve_image(im, make_gx_filter(), 0);
+    image sobel_gy = convolve_image(im, make_gy_filter(), 0);
+
+    for (int w = 0; w < im.w; w++)
+    {
+        for (int h = 0; h < im.h; h++)
+        {
+            for (int c = 0; c < 1; c++)
+            {
+                float x = get_pixel(sobel_gx, w, h, c);
+                float y = get_pixel(sobel_gy, w, h, c);
+
+                // magnitude
+                set_pixel(mag_and_direct[0], w, h, 0, sqrt(x * x + y * y));
+
+                // direction
+                set_pixel(mag_and_direct[1], w, h, 0, atan2(y, x));
+            }
+        }
+    }
+    return mag_and_direct;
 }
 
 image colorize_sobel(image im)
