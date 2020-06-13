@@ -157,14 +157,28 @@ image make_highpass_filter()
 
 image make_sharpen_filter()
 {
-    // TODO
-    return make_image(1, 1, 1);
+    int numOfChannel = 1;
+    image sharpen = make_image(3, 3, numOfChannel);
+
+    for (int c = 0; c < numOfChannel; c++)
+    {
+        set_pixel(sharpen, 0, 0, c, 0.);
+        set_pixel(sharpen, 0, 1, c, -1);
+        set_pixel(sharpen, 0, 2, c, 0.);
+
+        set_pixel(sharpen, 1, 0, c, -1.);
+        set_pixel(sharpen, 1, 1, c, 5.);
+        set_pixel(sharpen, 1, 2, c, -1.);
+
+        set_pixel(sharpen, 2, 0, c, 0.);
+        set_pixel(sharpen, 2, 1, c, -1.);
+        set_pixel(sharpen, 2, 2, c, 0.);
+    }
+    return sharpen;
 }
 
 image make_emboss_filter()
 {
-    // TODO
-    return make_image(1, 1, 1);
 }
 
 // Question 2.2.1: Which of these filters should we use preserve when we run our convolution and which ones should we not? Why?
