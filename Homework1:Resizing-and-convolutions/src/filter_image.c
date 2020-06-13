@@ -135,67 +135,49 @@ image convolve_image(image im, image filter, int preserve)
 
 image make_highpass_filter()
 {
-    int numOfChannel = 1;
-    image highpass = make_image(3, 3, numOfChannel);
+    image highpass = make_box_filter(3);
+    highpass.data[0] = 0;
+    highpass.data[1] = -1;
+    highpass.data[2] = 0;
+    highpass.data[3] = -1;
+    highpass.data[4] = 4;
+    highpass.data[5] = -1;
+    highpass.data[6] = 0;
+    highpass.data[7] = -1;
+    highpass.data[8] = 0;
 
-    for (int c = 0; c < numOfChannel; c++)
-    {
-        set_pixel(highpass, 0, 0, c, 0.);
-        set_pixel(highpass, 0, 1, c, -1);
-        set_pixel(highpass, 0, 2, c, 0.);
-
-        set_pixel(highpass, 1, 0, c, -1.);
-        set_pixel(highpass, 1, 1, c, 4.);
-        set_pixel(highpass, 1, 2, c, -1.);
-
-        set_pixel(highpass, 2, 0, c, 0.);
-        set_pixel(highpass, 2, 1, c, -1.);
-        set_pixel(highpass, 2, 2, c, 0.);
-    }
     return highpass;
 }
 
 image make_sharpen_filter()
 {
-    int numOfChannel = 1;
-    image sharpen = make_image(3, 3, numOfChannel);
+    image sharpen = make_box_filter(3);
+    sharpen.data[0] = 0;
+    sharpen.data[1] = -1;
+    sharpen.data[2] = 0;
+    sharpen.data[3] = -1;
+    sharpen.data[4] = 5;
+    sharpen.data[5] = -1;
+    sharpen.data[6] = 0;
+    sharpen.data[7] = -1;
+    sharpen.data[8] = 0;
 
-    for (int c = 0; c < numOfChannel; c++)
-    {
-        set_pixel(sharpen, 0, 0, c, 0.);
-        set_pixel(sharpen, 0, 1, c, -1);
-        set_pixel(sharpen, 0, 2, c, 0.);
-
-        set_pixel(sharpen, 1, 0, c, -1.);
-        set_pixel(sharpen, 1, 1, c, 5.);
-        set_pixel(sharpen, 1, 2, c, -1.);
-
-        set_pixel(sharpen, 2, 0, c, 0.);
-        set_pixel(sharpen, 2, 1, c, -1.);
-        set_pixel(sharpen, 2, 2, c, 0.);
-    }
     return sharpen;
 }
 
 image make_emboss_filter()
 {
-    int numOfChannel = 1;
-    image emboss = make_image(3, 3, numOfChannel);
+    image emboss = make_box_filter(3);
+    emboss.data[0] = -2;
+    emboss.data[1] = -1;
+    emboss.data[2] = 0;
+    emboss.data[3] = -1;
+    emboss.data[4] = 1;
+    emboss.data[5] = 1;
+    emboss.data[6] = 0;
+    emboss.data[7] = 1;
+    emboss.data[8] = 2;
 
-    for (int c = 0; c < numOfChannel; c++)
-    {
-        set_pixel(emboss, 0, 0, c, -2.);
-        set_pixel(emboss, 0, 1, c, -1);
-        set_pixel(emboss, 0, 2, c, 0.);
-
-        set_pixel(emboss, 1, 0, c, -1.);
-        set_pixel(emboss, 1, 1, c, 1.);
-        set_pixel(emboss, 1, 2, c, 1.);
-
-        set_pixel(emboss, 2, 0, c, 0.);
-        set_pixel(emboss, 2, 1, c, 1.);
-        set_pixel(emboss, 2, 2, c, 2.);
-    }
     return emboss;
 }
 
@@ -273,43 +255,33 @@ image sub_image(image a, image b)
 
 image make_gx_filter()
 {
-    int numOfChannel = 1;
-    image sobel_filter = make_image(3, 3, numOfChannel);
-    for (int c = 0; c < numOfChannel; c++)
-    {
-        set_pixel(sobel_filter, 0, 0, c, -1.);
-        set_pixel(sobel_filter, 0, 1, c, -2.);
-        set_pixel(sobel_filter, 0, 2, c, -1.);
+    image sobel_filter = make_box_filter(3);
+    sobel_filter.data[0] = -1;
+    sobel_filter.data[1] = 0;
+    sobel_filter.data[2] = 1;
+    sobel_filter.data[3] = -2;
+    sobel_filter.data[4] = 0;
+    sobel_filter.data[5] = 2;
+    sobel_filter.data[6] = -1;
+    sobel_filter.data[7] = 0;
+    sobel_filter.data[8] = 1;
 
-        set_pixel(sobel_filter, 1, 0, c, 0.);
-        set_pixel(sobel_filter, 1, 1, c, 0.);
-        set_pixel(sobel_filter, 1, 2, c, 0.);
-
-        set_pixel(sobel_filter, 2, 0, c, 1.);
-        set_pixel(sobel_filter, 2, 1, c, 2.);
-        set_pixel(sobel_filter, 2, 2, c, 1.);
-    }
     return sobel_filter;
 }
 
 image make_gy_filter()
 {
-    int numOfChannel = 1;
-    image sobel_filter = make_image(3, 3, numOfChannel);
-    for (int c = 0; c < numOfChannel; c++)
-    {
-        set_pixel(sobel_filter, 0, 0, c, -1.);
-        set_pixel(sobel_filter, 0, 1, c, 0.);
-        set_pixel(sobel_filter, 0, 2, c, 1.);
+    image sobel_filter = make_box_filter(3);
+    sobel_filter.data[0] = -1;
+    sobel_filter.data[1] = -2;
+    sobel_filter.data[2] = -1;
+    sobel_filter.data[3] = 0;
+    sobel_filter.data[4] = 0;
+    sobel_filter.data[5] = 0;
+    sobel_filter.data[6] = 1;
+    sobel_filter.data[7] = 2;
+    sobel_filter.data[8] = 1;
 
-        set_pixel(sobel_filter, 1, 0, c, -2.);
-        set_pixel(sobel_filter, 1, 1, c, 0.);
-        set_pixel(sobel_filter, 1, 2, c, 2.);
-
-        set_pixel(sobel_filter, 2, 0, c, -1.);
-        set_pixel(sobel_filter, 2, 1, c, 0.);
-        set_pixel(sobel_filter, 2, 2, c, 1.);
-    }
     return sobel_filter;
 }
 

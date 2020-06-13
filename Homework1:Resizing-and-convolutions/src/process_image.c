@@ -37,8 +37,7 @@ float get_pixel(image im, int x, int y, int c)
 
 void set_pixel(image im, int x, int y, int c, float v)
 {
-    int index = x + (im.w * y) + (im.w * im.h * c);
-    im.data[index] = v;
+    im.data[x + im.w * y + im.w * im.h * c] = v;
 }
 
 image copy_image(image im)
@@ -106,26 +105,29 @@ void shift_image(image im, int c, float v)
 
 void clamp_image(image im)
 {
-    // to avoid overflow
-    // make sure the pixel values in the image stay between 0 and 1.
+    /*!
+    * to avoid overflow
+    * make sure the pixel values in the image stay between 0 and 1.
+    */
     for (int c = 0; c < im.c; c++)
     {
-        for (int x = 0; x < im.w; x++)
+        for (int h = 0; h < im.h; h++)
         {
-            for (int y = 0; y < im.h; y++)
+            for (int w = 0; w < im.w; w++)
             {
-                // get and set value of pixel
-                float pixel_value = get_pixel(im, x, y, c);
+                // get pixel value
+                float v = get_pixel(im, w, h, c);
 
                 // any value below zero gets set to zero
                 // and any value above 1 gets set to one.
-                float clipped_value = pixel_value > 1.0 ? 1.0 : pixel_value;
-
-                set_pixel(im, x, y, c, clipped_value);
+                v = v > 1.0 ? 1.0 : v;
+                v = v < 0.0 ? 0.0 : v;
+                set_pixel(im, w, h, c, v);
             }
         }
     }
 }
+
 float three_way_max(float a, float b, float c)
 {
     return (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);
@@ -181,7 +183,6 @@ float compute_hue(float V, float R, float G, float B)
 
 void rgb_to_hsv(image im)
 {
-    float S, V, H;
     for (int y = 0; y < im.h; y++)
     {
         for (int x = 0; x < im.w; x++)
