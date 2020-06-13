@@ -273,14 +273,44 @@ image sub_image(image a, image b)
 
 image make_gx_filter()
 {
-    // TODO
-    return make_image(1, 1, 1);
+    int numOfChannel = 1;
+    image sobel_filter = make_image(3, 3, numOfChannel);
+    for (int c = 0; c < numOfChannel; c++)
+    {
+        set_pixel(sobel_filter, 0, 0, c, -1.);
+        set_pixel(sobel_filter, 0, 1, c, -2.);
+        set_pixel(sobel_filter, 0, 2, c, -1.);
+
+        set_pixel(sobel_filter, 1, 0, c, 0.);
+        set_pixel(sobel_filter, 1, 1, c, 0.);
+        set_pixel(sobel_filter, 1, 2, c, 0.);
+
+        set_pixel(sobel_filter, 2, 0, c, 1.);
+        set_pixel(sobel_filter, 2, 1, c, 2.);
+        set_pixel(sobel_filter, 2, 2, c, 1.);
+    }
+    return sobel_filter;
 }
 
 image make_gy_filter()
 {
-    // TODO
-    return make_image(1, 1, 1);
+    int numOfChannel = 1;
+    image sobel_filter = make_image(3, 3, numOfChannel);
+    for (int c = 0; c < numOfChannel; c++)
+    {
+        set_pixel(sobel_filter, 0, 0, c, -1.);
+        set_pixel(sobel_filter, 0, 1, c, 0.);
+        set_pixel(sobel_filter, 0, 2, c, 1.);
+
+        set_pixel(sobel_filter, 1, 0, c, -2.);
+        set_pixel(sobel_filter, 1, 1, c, 0.);
+        set_pixel(sobel_filter, 1, 2, c, 2.);
+
+        set_pixel(sobel_filter, 2, 0, c, -1.);
+        set_pixel(sobel_filter, 2, 1, c, 0.);
+        set_pixel(sobel_filter, 2, 2, c, 1.);
+    }
+    return sobel_filter;
 }
 
 void feature_normalize(image im)
