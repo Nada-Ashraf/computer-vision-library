@@ -12,15 +12,15 @@
 
 ## Index
 
-|     |                                          Assignment                                          |
-| --- | :------------------------------------------------------------------------------------------: |
-| [x] |           [**Homework 0: Fun with color!**](./Homework0:Fun-with-color!/README.md)           |
-| [ ] | [**Homework 1: Resizing and convolutions**](./Homework1:Resizing-and-convolutions/README.md) |
-| [ ] |                                  **Homework 2: Panoramas!**                                  |
-| [ ] |                                  **Homework 2: Panoramas!**                                  |
-| [ ] |                                 **Homework 3: Optical Flow**                                 |
-| [ ] |                     **Homework 4: Neural Networks and Machine Learning**                     |
-| [ ] |                                   **Homework 5: PyTorch**                                    |
+| Done |                                          Assignment                                          |
+| ---- | :------------------------------------------------------------------------------------------: |
+| [✔]  |           [**Homework 0: Fun with color!**](./Homework0:Fun-with-color!/README.md)           |
+| [✔]  | [**Homework 1: Resizing and convolutions**](./Homework1:Resizing-and-convolutions/README.md) |
+| [--] |                                  **Homework 2: Panoramas!**                                  |
+| [--] |                                  **Homework 2: Panoramas!**                                  |
+| [--] |                                 **Homework 3: Optical Flow**                                 |
+| [--] |                     **Homework 4: Neural Networks and Machine Learning**                     |
+| [--] |                                   **Homework 5: PyTorch**                                    |
 
 ## Course Material
 
