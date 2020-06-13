@@ -135,8 +135,24 @@ image convolve_image(image im, image filter, int preserve)
 
 image make_highpass_filter()
 {
-    // TODO
-    return make_image(1, 1, 1);
+    int numOfChannel = 1;
+    image highpass = make_image(3, 3, numOfChannel);
+
+    for (int c = 0; c < numOfChannel; c++)
+    {
+        set_pixel(highpass, 0, 0, c, 0.);
+        set_pixel(highpass, 0, 1, c, -1);
+        set_pixel(highpass, 0, 2, c, 0.);
+
+        set_pixel(highpass, 1, 0, c, -1.);
+        set_pixel(highpass, 1, 1, c, 4.);
+        set_pixel(highpass, 1, 2, c, -1.);
+
+        set_pixel(highpass, 2, 0, c, 0.);
+        set_pixel(highpass, 2, 1, c, -1.);
+        set_pixel(highpass, 2, 2, c, 0.);
+    }
+    return highpass;
 }
 
 image make_sharpen_filter()
