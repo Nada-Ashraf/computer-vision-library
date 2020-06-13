@@ -27,3 +27,13 @@ im = load_image("data/dog.jpg")
 f = make_gaussian_filter(2)
 blur = convolve_image(im, f, 1)
 save_image(blur, "./results/dog-gauss2")
+
+# 4. Hybrid images
+im = load_image("data/dog.jpg")
+f = make_gaussian_filter(2)
+lfreq = convolve_image(im, f, 1)
+hfreq = im - lfreq
+reconstruct = lfreq + hfreq
+save_image(lfreq, "./results/low-frequency")
+save_image(hfreq, "./results/high-frequency")
+save_image(reconstruct, "./results/reconstruct")
