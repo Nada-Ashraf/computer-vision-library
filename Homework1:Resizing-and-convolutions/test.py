@@ -37,3 +37,10 @@ reconstruct = lfreq + hfreq
 save_image(lfreq, "./results/low-frequency")
 save_image(hfreq, "./results/high-frequency")
 save_image(reconstruct, "./results/reconstruct")
+
+# 5. Calculate gradient magnitude and direction
+im = load_image("data/dog.jpg")
+res = sobel_image(im)
+mag = res[0]
+feature_normalize(mag)
+save_image(mag, "./results/magnitude")
