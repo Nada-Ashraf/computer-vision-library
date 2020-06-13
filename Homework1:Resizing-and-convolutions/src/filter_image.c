@@ -387,6 +387,26 @@ image *sobel_image(image im)
 
 image colorize_sobel(image im)
 {
-    // TODO
-    return make_image(1, 1, 1);
+    image *mag_and_direct = sobel_image(im);
+    image colorize_sobel = make_image(im.w, im.h, im.c);
+    feature_normalize(mag_and_direct[0]);
+    feature_normalize(mag_and_direct[1]);
+    float S, V, H;
+    for (int w = 0; w < im.w; w++)
+    {
+        for (int h = 0; h < im.h; h++)
+        {
+            // use the magnitude to specify the
+            // saturation and value of an image
+            // and the angle to specify the hue
+            S = get_pixel(mag_and_direct[0], w, h, 0);
+            V = get_pixel(mag_and_direct[0], w, h, 0);
+            H = get_pixel(mag_and_direct[1], w, h, 0);
+            set_pixel(colorize_sobel, w, h, 0, H);
+            set_pixel(colorize_sobel, w, h, 1, S);
+            set_pixel(colorize_sobel, w, h, 2, V);
+        }
+    }
+    hsv_to_rgb(colorize_sobel);
+    return colorize_sobel;
 }
