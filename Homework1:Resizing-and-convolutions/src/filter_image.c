@@ -34,8 +34,15 @@ void l1_normalize(image im)
 
 image make_box_filter(int w)
 {
-    // TODO
-    return make_image(1, 1, 1);
+    // make a square image w * w with one channel
+    image filter = make_image(w, w, 1);
+
+    // fill the image with uniform entries that sum to 1
+    for (int i = 0; i < w * w; i++)
+        filter.data[i] = 1.0;
+    l1_normalize(filter);
+
+    return filter;
 }
 
 image convolve_image(image im, image filter, int preserve)
