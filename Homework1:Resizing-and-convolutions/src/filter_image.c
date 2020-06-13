@@ -315,7 +315,39 @@ image make_gy_filter()
 
 void feature_normalize(image im)
 {
-    // TODO
+    // for comparison
+    float maxi = -INFINITY;
+    float mini = +INFINITY;
+
+    // find max and min
+    for (int i = 0; i < im.w * im.h * im.c; i++)
+    {
+        maxi = fmax(im.data[i], maxi);
+        mini = fmin(im.data[i], mini);
+    }
+
+    float range = maxi - mini;
+    float normalizing_pixel;
+    for (int w = 0; w < im.w; w++)
+    {
+        for (int h = 0; h < im.h; h++)
+        {
+            for (int c = 0; c < im.c; c++)
+            {
+                float pixel = get_pixel(im, w, h, c);
+                if (range != 0.)
+                {
+                    normalizing_pixel = (pixel - mini) / range;
+                }
+                else
+                {
+                    // avoid zero division
+                    normalizing_pixel = 0;
+                }
+                set_pixel(im, w, h, c, normalizing_pixel);
+            }
+        }
+    }
 }
 
 image *sobel_image(image im)
