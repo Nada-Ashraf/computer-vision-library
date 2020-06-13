@@ -47,8 +47,90 @@ image make_box_filter(int w)
 
 image convolve_image(image im, image filter, int preserve)
 {
-    // TODO
-    return make_image(1, 1, 1);
+    // Note that filter's size can'n be even, i.e 1x1, 3x3, 5x5 etc
+    // filter better have either the same number of channels as im or have 1 channel
+    assert(im.c == filter.c || filter.c == 1);
+
+    // 3 cases:
+    // 1. filter and im have the same number of channels
+    // 2. If preserve is set to 1 we should produce an image with the same number of channels as the input
+    // 3. If the filter only has one channel but im has multiple channels
+    int numOfChannel;
+    if (im.c == filter.c)
+    {
+        numOfChannel = 1;
+        if (preserve == 1)
+        {
+            numOfChannel = im.c;
+        }
+    }
+    else if (filter.c == 1)
+    {
+        numOfChannel = 1;
+        if (preserve == 1)
+        {
+            numOfChannel = 3;
+        }
+    }
+    image convolved = make_image(im.w, im.h, numOfChannel);
+
+    float sum, x_im, y_im, filter_pixel, im_pixel;
+
+    // loop over every pixel in image
+    for (int w = 0; w < im.w; w++)
+    {
+        for (int h = 0; h < im.h; h++)
+        {
+            sum = 0;
+            for (int c = 0; c < im.c; c++)
+            {
+                // set sum to zero when starting to convolve over different channel
+                if (numOfChannel > 1)
+                {
+                    sum = 0;
+                }
+
+                // loop over the filter pixels and apply filter to pixel in the center
+                for (int filter_w = 0; filter_w < filter.w; filter_w++)
+                {
+                    // to apply to pixel in the center of filter
+                    x_im = w + filter_w - filter.w / 2;
+                    for (int filter_h = 0; filter_h < filter.h; filter_h++)
+                    {
+                        // to apply to pixel in the center of filter
+                        y_im = h + filter_h - filter.h / 2;
+
+                        // get the center pixel value of the image
+                        im_pixel = get_pixel(im, x_im, y_im, c);
+
+                        // get the center pixel value of the filter
+                        if (filter.c > 1)
+                        {
+                            filter_pixel = get_pixel(filter, filter_w, filter_h, c);
+                        }
+                        else
+                        {
+                            filter_pixel = get_pixel(filter, filter_w, filter_h, 0);
+                        }
+                        // get the weighted sum over all values resulting from
+                        // convulving the certain pixel with the kernel
+                        sum += im_pixel * filter_pixel;
+                    }
+                }
+                // set pixel to new value
+                if (numOfChannel > 1)
+                {
+                    set_pixel(convolved, w, h, c, sum);
+                }
+            }
+
+            if (numOfChannel == 1)
+            {
+                set_pixel(convolved, w, h, 0, sum);
+            }
+        }
+    }
+    return convolved;
 }
 
 image make_highpass_filter()
