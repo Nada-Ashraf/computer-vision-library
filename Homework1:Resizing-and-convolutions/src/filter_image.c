@@ -199,16 +199,49 @@ image make_emboss_filter()
     return emboss;
 }
 
-// Question 2.2.1: Which of these filters should we use preserve when we run our convolution and which ones should we not? Why?
-// Answer: TODO
-
-// Question 2.2.2: Do we have to do any post-processing for the above filters? Which ones and why?
-// Answer: TODO
+float gauss_formula(int x, int y, int center, float sigma)
+{
+    /*!
+    * The probability density function for a 2d gaussian
+    */
+    int sub_x = x - center;
+    int sub_y = y - center;
+    return 1. / (TWOPI * sigma * sigma) * exp(-1 * (sub_x * sub_x + sub_y * sub_y) / (2 * sigma * sigma));
+}
 
 image make_gaussian_filter(float sigma)
 {
-    // TODO
-    return make_image(1, 1, 1);
+    /*!
+    * this func takes a standard deviation value and return 
+    * a filter that smooths using a gaussian with that sigma
+    */
+
+    // 99% of the probability mass for a gaussian is within +/- 3 standard deviations
+    // so make the kernel be 6 times the size of sigma
+    // But also we want an odd number
+    // so make it be the next highest odd integer from 6x sigma.
+    int size = ceil(sigma * 6);
+    size = size % 2 == 0 ? size + 1 : size;
+    int center = (int)size / 2;
+    assert(size == center * 2. + 1.);
+
+    image kernel = make_image(size, size, 1);
+
+    for (int x = 0; x < size; x++)
+    {
+        for (int y = 0; y < size; y++)
+        {
+            for (int c = 0; c < 1; c++)
+            {
+                set_pixel(kernel, x, y, c, gauss_formula(x, y, center, sigma));
+            }
+        }
+    }
+
+    // this is a blurring filter so we want all the weights to sum to 1
+    l1_normalize(kernel);
+
+    return kernel;
 }
 
 image add_image(image a, image b)

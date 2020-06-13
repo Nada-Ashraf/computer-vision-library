@@ -21,3 +21,9 @@ f = make_box_filter(7)
 blur = convolve_image(im, f, 1)
 thumb = nn_resize(blur, blur.w//7, blur.h//7)
 save_image(thumb, "./results/dogthumb")
+
+# 3. Gauss smoothing
+im = load_image("data/dog.jpg")
+f = make_gaussian_filter(2)
+blur = convolve_image(im, f, 1)
+save_image(blur, "./results/dog-gauss2")
