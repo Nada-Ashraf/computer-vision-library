@@ -246,14 +246,29 @@ image make_gaussian_filter(float sigma)
 
 image add_image(image a, image b)
 {
-    // TODO
-    return make_image(1, 1, 1);
+    // check that the two images have the same size
+    assert(a.w == b.w && a.h == b.h && a.c == b.c);
+
+    // make the new hybrid image
+    image im = make_image(a.w, a.h, a.c);
+
+    // sum
+    for (int i = 0; i < im.w * im.h * im.c; i++)
+    {
+        im.data[i] = a.data[i] + b.data[i];
+    }
+    return im;
 }
 
 image sub_image(image a, image b)
 {
-    // TODO
-    return make_image(1, 1, 1);
+    assert(a.w == b.w && a.h == b.h && a.c == b.c);
+    image im = make_image(a.w, a.h, a.c);
+    for (int i = 0; i < im.w * im.h * im.c; i++)
+    {
+        im.data[i] = a.data[i] - b.data[i];
+    }
+    return im;
 }
 
 image make_gx_filter()
