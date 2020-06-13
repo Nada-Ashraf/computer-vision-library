@@ -8,37 +8,58 @@
 
 void l1_normalize(image im)
 {
-    // TODO
+    for (int c = 0; c < im.c; c++)
+    {
+        // loop over the image to calculate the summation of pixel values
+        float pixel_sum = 0;
+        for (int x = 0; x < im.w; x++)
+        {
+            for (int y = 0; y < im.h; y++)
+            {
+                float pixel_value = get_pixel(im, x, y, c);
+                pixel_sum += pixel_value;
+            }
+        }
+        // loop over the image and normalize each pixel value
+        for (int x = 0; x < im.w; x++)
+        {
+            for (int y = 0; y < im.h; y++)
+            {
+                float pixel_value = get_pixel(im, x, y, c);
+                set_pixel(im, x, y, c, pixel_value / pixel_sum);
+            }
+        }
+    }
 }
 
 image make_box_filter(int w)
 {
     // TODO
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
 
 image convolve_image(image im, image filter, int preserve)
 {
     // TODO
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
 
 image make_highpass_filter()
 {
     // TODO
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
 
 image make_sharpen_filter()
 {
     // TODO
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
 
 image make_emboss_filter()
 {
     // TODO
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
 
 // Question 2.2.1: Which of these filters should we use preserve when we run our convolution and which ones should we not? Why?
@@ -50,31 +71,31 @@ image make_emboss_filter()
 image make_gaussian_filter(float sigma)
 {
     // TODO
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
 
 image add_image(image a, image b)
 {
     // TODO
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
 
 image sub_image(image a, image b)
 {
     // TODO
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
 
 image make_gx_filter()
 {
     // TODO
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
 
 image make_gy_filter()
 {
     // TODO
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
 
 void feature_normalize(image im)
@@ -91,5 +112,5 @@ image *sobel_image(image im)
 image colorize_sobel(image im)
 {
     // TODO
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
