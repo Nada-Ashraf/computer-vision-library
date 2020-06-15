@@ -147,6 +147,35 @@ image structure_matrix(image im, float sigma)
     return smooth_image(S, sigma);
 }
 
+// Estimate the cornerness of each pixel given a structure matrix S.
+// image S: structure matrix for an image.
+// returns: a response map of cornerness calculations.
+image cornerness_response(image S)
+{
+    // det(S) - alpha * trace(S)^2, alpha = .06.
+
+    image R = make_image(S.w, S.h, 1);
+    float alpha = 0.06;
+    float xx, yy, xy, det, tr;
+
+    // loop over every pixel in the structure matrix and calculate R
+    for (int i = 0; i < S.w; i++)
+        for (int j = 0; j < S.h; j++)
+        {
+            xx = get_pixel(S, i, j, 0);
+            yy = get_pixel(S, i, j, 1);
+            xy = get_pixel(S, i, j, 2);
+
+            // det(S) - alpha * trace(S)^2, alpha = .06
+            det = xx * yy - xy * xy;
+            tr = xx + yy;
+            set_pixel(R, i, j, 0, det - alpha * tr * tr);
+        }
+
+    // return "cornerness" for each pixel
+    return R;
+}
+
 // Perform non-max supression on an image of feature responses.
 // image im: 1-channel image of feature responses.
 // int w: distance to look for larger responses.
