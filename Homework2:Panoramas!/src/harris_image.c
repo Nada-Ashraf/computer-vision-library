@@ -13,7 +13,8 @@
 void free_descriptors(descriptor *d, int n)
 {
     int i;
-    for(i = 0; i < n; ++i){
+    for (i = 0; i < n; ++i)
+    {
         free(d[i].data);
     }
     free(d);
@@ -27,20 +28,23 @@ descriptor describe_index(image im, int i)
 {
     int w = 5;
     descriptor d;
-    d.p.x = i%im.w;
-    d.p.y = i/im.w;
-    d.data = calloc(w*w*im.c, sizeof(float));
-    d.n = w*w*im.c;
+    d.p.x = i % im.w;
+    d.p.y = i / im.w;
+    d.data = calloc(w * w * im.c, sizeof(float));
+    d.n = w * w * im.c;
     int c, dx, dy;
     int count = 0;
     // If you want you can experiment with other descriptors
     // This subtracts the central value from neighbors
     // to compensate some for exposure/lighting changes.
-    for(c = 0; c < im.c; ++c){
-        float cval = im.data[c*im.w*im.h + i];
-        for(dx = -w/2; dx < (w+1)/2; ++dx){
-            for(dy = -w/2; dy < (w+1)/2; ++dy){
-                float val = get_pixel(im, i%im.w+dx, i/im.w+dy, c);
+    for (c = 0; c < im.c; ++c)
+    {
+        float cval = im.data[c * im.w * im.h + i];
+        for (dx = -w / 2; dx < (w + 1) / 2; ++dx)
+        {
+            for (dy = -w / 2; dy < (w + 1) / 2; ++dy)
+            {
+                float val = get_pixel(im, i % im.w + dx, i / im.w + dy, c);
                 d.data[count++] = cval - val;
             }
         }
@@ -56,13 +60,14 @@ void mark_spot(image im, point p)
     int x = p.x;
     int y = p.y;
     int i;
-    for(i = -9; i < 10; ++i){
-        set_pixel(im, x+i, y, 0, 1);
-        set_pixel(im, x, y+i, 0, 1);
-        set_pixel(im, x+i, y, 1, 0);
-        set_pixel(im, x, y+i, 1, 0);
-        set_pixel(im, x+i, y, 2, 1);
-        set_pixel(im, x, y+i, 2, 1);
+    for (i = -9; i < 10; ++i)
+    {
+        set_pixel(im, x + i, y, 0, 1);
+        set_pixel(im, x, y + i, 0, 1);
+        set_pixel(im, x + i, y, 1, 0);
+        set_pixel(im, x, y + i, 1, 0);
+        set_pixel(im, x + i, y, 2, 1);
+        set_pixel(im, x, y + i, 2, 1);
     }
 }
 
@@ -73,7 +78,8 @@ void mark_spot(image im, point p)
 void mark_corners(image im, descriptor *d, int n)
 {
     int i;
-    for(i = 0; i < n; ++i){
+    for (i = 0; i < n; ++i)
+    {
         mark_spot(im, d[i].p);
     }
 }
@@ -84,7 +90,7 @@ void mark_corners(image im, descriptor *d, int n)
 image make_1d_gaussian(float sigma)
 {
     // TODO: optional, make separable 1d Gaussian.
-    return make_image(1,1,1);
+    return make_image(1, 1, 1);
 }
 
 // Smooths an image using separable Gaussian filter.
@@ -93,12 +99,15 @@ image make_1d_gaussian(float sigma)
 // returns: smoothed image.
 image smooth_image(image im, float sigma)
 {
-    if(1){
+    if (1)
+    {
         image g = make_gaussian_filter(sigma);
         image s = convolve_image(im, g, 1);
         free_image(g);
         return s;
-    } else {
+    }
+    else
+    {
         // TODO: optional, use two convolutions with 1d gaussian filter.
         // If you implement, disable the above if check.
         return copy_image(im);
@@ -113,19 +122,29 @@ image smooth_image(image im, float sigma)
 image structure_matrix(image im, float sigma)
 {
     image S = make_image(im.w, im.h, 3);
-    // TODO: calculate structure matrix for im.
-    return S;
-}
 
-// Estimate the cornerness of each pixel given a structure matrix S.
-// image S: structure matrix for an image.
-// returns: a response map of cornerness calculations.
-image cornerness_response(image S)
-{
-    image R = make_image(S.w, S.h, 1);
-    // TODO: fill in R, "cornerness" for each pixel using the structure matrix.
-    // We'll use formulation det(S) - alpha * trace(S)^2, alpha = .06.
-    return R;
+    // Calculate image derivatives Ix and Iy by sobel filters
+    image ix = convolve_image(im, make_gx_filter(), 0);
+    image iy = convolve_image(im, make_gy_filter(), 0);
+
+    // Calculate measures IxIx, IyIy, and IxIy
+    float x, y;
+    for (int i = 0; i < im.w; i++)
+        for (int j = 0; j < im.h; j++)
+        {
+            x = get_pixel(ix, i, j, 0);
+            y = get_pixel(iy, i, j, 0);
+
+            // store measures in different channels of the image
+            set_pixel(S, i, j, 0, x * x);
+            set_pixel(S, i, j, 1, y * y);
+            set_pixel(S, i, j, 2, x * y);
+        }
+    free_image(ix);
+    free_image(iy);
+
+    // Return weighted sum of nearby measures with a Gaussian blur
+    return smooth_image(S, sigma);
 }
 
 // Perform non-max supression on an image of feature responses.
@@ -161,15 +180,12 @@ descriptor *harris_corner_detector(image im, float sigma, float thresh, int nms,
     // Run NMS on the responses
     image Rnms = nms_image(R, nms);
 
-
     //TODO: count number of responses over threshold
     int count = 1; // change this
 
-    
     *n = count; // <- set *n equal to number of corners in image.
     descriptor *d = calloc(count, sizeof(descriptor));
     //TODO: fill in array *d with descriptors of corners, use describe_index.
-
 
     free_image(S);
     free_image(R);
