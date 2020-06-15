@@ -183,11 +183,30 @@ image cornerness_response(image S)
 image nms_image(image im, int w)
 {
     image r = copy_image(im);
-    // TODO: perform NMS on the response map.
-    // for every pixel in the image:
-    //     for neighbors within w:
-    //         if neighbor response greater than pixel response:
-    //             set response to be very low (I use -999999 [why not 0??])
+
+    // for every pixel in the image
+    for (int i = 0; i < r.w; i++)
+        for (int j = 0; j < r.h; j++)
+        {
+            // get image pixel value
+            float im_pixel = get_pixel(im, i, j, 0);
+
+            // for neighbors within square with width = 2 * w + 1
+            for (int wi = 0; wi < 2 * w + 1; wi++)
+                for (int wj = 0; wj < 2 * w + 1; wj++)
+                {
+                    // get neighbor pixel value
+                    float w_pixel = get_pixel(im, i - (w - wi), j - (w - wj), 0);
+
+                    // if neighbor response greater than pixel response:
+                    // set response to be very low
+                    if (w_pixel > im_pixel)
+                    {
+                        set_pixel(r, i, j, 0, -999999);
+                        break;
+                    }
+                }
+        }
     return r;
 }
 
