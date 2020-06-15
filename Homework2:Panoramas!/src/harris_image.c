@@ -228,13 +228,39 @@ descriptor *harris_corner_detector(image im, float sigma, float thresh, int nms,
     // Run NMS on the responses
     image Rnms = nms_image(R, nms);
 
-    //TODO: count number of responses over threshold
-    int count = 1; // change this
+    // https://github.com/DiaaZiada/Uwimg
+    // count number of responses over threshold
+    int count = 0;
+    int capacity = 64;
+    int *arr = (int *)malloc(capacity * sizeof(int));
+    for (int i = 0; i < Rnms.w; i++)
+        for (int j = 0; j < Rnms.h; j++)
+        {
+            if (get_pixel(Rnms, i, j, 0) >= thresh)
+            {
+                ++count;
+                if (count > capacity)
+                {
+                    capacity <<= 1;
+                    int *new_arr = (int *)malloc(capacity * sizeof(int));
+                    memcpy(new_arr, arr, (capacity >> 1) * sizeof(int));
+                    free(arr);
+                    arr = new_arr;
+                }
+                arr[count - 1] = i + j * Rnms.w;
+            }
+        }
 
     *n = count; // <- set *n equal to number of corners in image.
     descriptor *d = calloc(count, sizeof(descriptor));
-    //TODO: fill in array *d with descriptors of corners, use describe_index.
+    // fill in array *d with descriptors of corners, use describe_index.
+    descriptor *ptr = d;
+    for (int i = 0; i < count; ++i)
+    {
+        *ptr++ = describe_index(im, arr[i]);
+    }
 
+    free(arr);
     free_image(S);
     free_image(R);
     free_image(Rnms);
